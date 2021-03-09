@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "axios";
+import Movie from "./Movie";
+import "./App.css";
 
 class App extends React.Component {
   state = {
@@ -7,16 +9,45 @@ class App extends React.Component {
     movie: [],
   };
   getMovies = async () => {
-    const movies = await axios.get(
-      "https://yts-proxy.nomadcoders1.now.sh/list_movies.json"
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios.get(
+      "https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating"
     );
+    this.setState({ movies, isLoading: false }); //{movies: movies} 가능
   };
   componentDidMount() {
     this.getMovies();
   }
   render() {
-    const { isLoading } = this.state; //ES6 문법
-    return <div>{isLoading ? "Loading" : "we are ready"}</div>;
+    const { isLoading, movies } = this.state; //ES6 문법
+    return (
+      <section className="container">
+        {isLoading ? (
+          <div className="loader">
+            <span className="loader_text">Loading...</span>
+          </div>
+        ) : (
+          <div className="movies">
+            {movies.map((movie) => {
+              return (
+                <Movie
+                  key={movie.id}
+                  id={movie.id}
+                  year={movie.year}
+                  title={movie.title}
+                  summary={movie.summary}
+                  poster={movie.medium_cover_image}
+                  genres={movie.genres}
+                />
+              );
+            })}
+          </div>
+        )}
+      </section>
+    );
   }
 }
 
