@@ -1,54 +1,23 @@
 import React from "react";
-import axios from "axios";
-import Movie from "./Movie";
+import { HashRouter, Route } from "react-router-dom";
+import Home from "./routes/Home";
+import About from "./routes/About";
+import Navigation from "./components/Navigation";
 import "./App.css";
 
-class App extends React.Component {
-  state = {
-    isLoading: true,
-    movie: [],
-  };
-  getMovies = async () => {
-    const {
-      data: {
-        data: { movies },
-      },
-    } = await axios.get(
-      "https://yts-proxy.nomadcoders1.now.sh/list_movies.json?sort_by=rating"
-    );
-    this.setState({ movies, isLoading: false }); //{movies: movies} 가능
-  };
-  componentDidMount() {
-    this.getMovies();
-  }
-  render() {
-    const { isLoading, movies } = this.state; //ES6 문법
-    return (
-      <section className="container">
-        {isLoading ? (
-          <div className="loader">
-            <span className="loader_text">Loading...</span>
-          </div>
-        ) : (
-          <div className="movies">
-            {movies.map((movie) => {
-              return (
-                <Movie
-                  key={movie.id}
-                  id={movie.id}
-                  year={movie.year}
-                  title={movie.title}
-                  summary={movie.summary}
-                  poster={movie.medium_cover_image}
-                  genres={movie.genres}
-                />
-              );
-            })}
-          </div>
-        )}
-      </section>
-    );
-  }
+function App() {
+  return (
+    // path about.js로 들어가서 그리고 component About을 보여줘! 라는 뜻이다.
+    <HashRouter>
+      <Navigation />
+      <Route path="/" exact={true} component={Home} />
+      <Route path="/about" component={About} />
+    </HashRouter>
+  );
 }
 
 export default App;
+//너가 link를 쓰고 있는 한 router안에 모든 것을 넣어야 한다.
+//네비게이션은 꼭 router안에 있어야 한다. 즉, 너가 link를 사용한다면 이것은 라우터 안에 있어야한다.
+//exact는 동시 랜더링을 고치는법
+//먼저 Router를 만들고 그 다음 Router안에는 스크린을 넣는 거야. 그래서 원하는 만큼 path를 만들 수 있어
