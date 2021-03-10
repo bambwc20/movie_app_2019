@@ -3,6 +3,7 @@ import "./About.css";
 
 function About() {
   return (
+    //About(props) 했을때 props = {history, location, match, staticContext} react-router의 작품이다.
     <div className="about__container">
       <span>
         “Freedom is the freedom to say that two plus two make four. If that is
